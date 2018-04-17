@@ -1,5 +1,11 @@
-$(function () {
+/*
+    Author:     Nicholas Perez
+    Date:       3/10/18
+    Version:    1.0
+    Green River College Seismic Simulating Earthquakes.
+ */
 
+$(function () {
 
     //Station object with a pos: x and y, as well as its distance from the earthquake
     function Station(name, stationX, stationY, distance) {
@@ -41,10 +47,15 @@ $(function () {
     let map = $('#map');
     let stationPool =[];
     let stationDiv = $('#stationDiv');
-    let pos = {
-        x: 0,
-        y: 0
-    };
+    let pos = {x: 0, y: 0};
+
+    //circle variables
+    let selectorSize = 1;
+    let line = 1;
+    let isHeldDown = false;
+    let lastMouseMoveX = 0;
+
+
 
     function init() {
 
@@ -87,6 +98,7 @@ $(function () {
         creatStationOnClick(stationPool);
 
         //creates circle measure on click/drag tool
+        createMouseDownEvents(stationPool);
 
         console.log(stationPool);
 
@@ -96,8 +108,21 @@ $(function () {
     function plotStations(stations) {
         stationDiv.empty();
 
+        let circleDistanceIdName = '';
+        let distanceLineIdName = '';
+        let circleClickIdName = '';
+
         for(let i = 0; i<stations.length; i++){
-            stationDiv.append('<div class="station-style" id="'+stations[i].name+'"></div>');
+
+            circleDistanceIdName = stations[i].name+'-circumferenceText';
+            distanceLineIdName = stations[i].name+'-distanceLine';
+            circleClickIdName = stations[i].name+'-circleClick';
+
+            stationDiv.append('<div class="station-style" id="'+stations[i].name+'">' +
+                '<span id="'+circleDistanceIdName+'"></span>'+
+                '<div id="'+distanceLineIdName+'"></div>'+
+                '<div id="'+circleClickIdName+'"></div>'+
+                '</div>');
 
             $('#'+stations[i].name)
                 .css("left", stations[i].stationX+PADDING_COMPENSATION+'px')
@@ -140,14 +165,50 @@ $(function () {
 
 
     /*
-        Measuring tool for Stations - Click and drag circle representing distance
+        Circumference Measuring tool for Stations - Click and drag circle representing distance
      */
-    function create() {
+    function createMouseDownEvents(stations) {
+        for(let i = 0 ; i< stations.length; i++){
+            $('#'+stations[i].name).mousedown(function () {
+                isHeldDown = true;
+            })
+        }
+    }
 
+    $(document).mouseup(function () {
+        isHeldDown = false;
+    });
+
+    $(document).mousemove(function (event) {
+        if(lastMouseMoveX === 0){
+            grow();
+
+        } else{
+            if(event.offsetX > lastMouseMoveX){
+                grow();
+                lastMouseMoveX = event.offsetX;
+            }else{
+                shrink();
+                lastMouseMoveX = event.offsetX;
+            }
+        }
+        lastX = event.offsetX;
+    });
+
+    function circleGrow() {
+        if(isHeldDown){
+            //increase circle size and adjust position back and up to offset the growth
+            //also enlarge the line
+        }
+    }
+
+    function circleShrink() {
+        if(isHeldDown){
+            //same as grow but the opposite
+        }
     }
 
     //generates seismic graph for each station
-    //to-do
 
 
     //UI and button controls
