@@ -1,0 +1,81 @@
+/*
+Green River College Colors
+
+green: #2c882b
+orange: #d14900
+gray: #525252
+
+
+*/
+
+
+.menu{
+
+    padding: 10px;
+    background-color: #f2f2f2;
+}
+
+.infoTab{
+     background-color: #000;
+     height: 8px;
+     width: 8px;
+     position: absolute;
+ }
+
+.station-style{
+    background-color: #000;
+    height: 8px;
+    width: 8px;
+    position: absolute;
+}
+
+.mapStyle{
+    background-color: #c1c1c1;
+    height: 400px;
+    width: 850px;
+}
+
+.pool{
+    height: 400px;
+    width: 850px;
+}
+.size{
+    height: 400px;
+    width: 850px;
+}
+
+.testBG{
+    background-color: #f2f2f2;
+}
+
+.testGrid {
+    background-image:
+            linear-gradient(
+                    90deg,
+                    rgb(248, 250, 249) 1px,
+                    transparent 0
+            ),
+            linear-gradient(
+                    180deg,
+                    rgb(243, 249, 250) 1px,
+                    transparent 0
+            ),
+            linear-gradient(
+                    90deg,
+                    rgba(250, 244, 245, 0.3) 1px,
+                    transparent 0
+            ),
+            linear-gradient(
+                    180deg,
+                    rgba(250, 246, 250, 0.3) 1px,
+                    transparent 0
+            );
+    background-size:
+            50px, 100% 50px,
+            10px, 100% 10px;
+    pointer-events: none;
+}
+
+.pointer{
+    cursor: pointer;
+}
