@@ -35,10 +35,10 @@ $(function () {
         The numbers are later multiplied by ten to use on a pixel grid
         and to avoid decimal points when finding distance later
     */
-    const STATION_X_RANGE = 82;
-    const STATION_Y_RANGE = 37;
-    const EARTHQUAKE_X_RANGE = 75;
-    const EARTHQUAKE_Y_RANGE = 30;
+    const STATION_X_RANGE = 50;
+    const STATION_Y_RANGE = 50;
+    const EARTHQUAKE_X_RANGE = 40;
+    const EARTHQUAKE_Y_RANGE = 40;
 
     //misc constants
     const NUMBER_OF_STATIONS = 5;
@@ -48,12 +48,10 @@ $(function () {
     let map = $('#map');
     let stationPool =[];
     let stationDiv = $('#stationDiv');
+    let rangeCircle = $('#rangeCircle')
     let pos = {x: 0, y: 0};
-    let selected = '';
+    let selected;
 
-    //circle variables
-    let selectorSize = 0;
-    let line = 1;
 
 
 
@@ -63,7 +61,13 @@ $(function () {
         //checks if its fresh load
         if(stationPool.length > 0){
             stationPool = [];
+
+            for(let j = 0 ; j<stationPool.length ; j++){
+                stationPool[j]['range'] = 0;
+            }
         }
+
+        selected = '';
 
         //creates earthquake object
         let earthQuake = new Earthquake(
@@ -96,10 +100,10 @@ $(function () {
         plotStations(stationPool);
 
         //creates and adds click functionality for station divs
-        creatStationOnClick(stationPool);
+        createStationOnClick(stationPool);
 
         //creates circle measure on wheel movement
-        createCircumferenceEvents(stationPool);
+        document.addEventListener('wheel',createCircumferenceEvents);
 
 
         console.log(stationPool);
@@ -109,22 +113,26 @@ $(function () {
     //plots station into the #stationDiv at random top/left points
     function plotStations(stations) {
         stationDiv.empty();
+        rangeCircle.empty();
 
-        let circleDistanceIdName = '';
-        let distanceLineIdName = '';
-        let circleClickIdName = '';
+        let test = document.querySelector('#stationDiv');
+        let stationName;
+        let circleDistanceIdName,distanceLineIdName,circleClickIdName;
 
         for(let i = 0; i<stations.length; i++){
-
             circleDistanceIdName = stations[i].name+'-circumferenceText';
             distanceLineIdName = stations[i].name+'-distanceLine';
             circleClickIdName = stations[i].name+'-circleClick';
 
-            stationDiv.append('<div class="station-style" id="'+stations[i].name+'">' +
-                '<span id="'+circleDistanceIdName+'" class="circleSize" style="top:'+parseInt((stations[i].stationY)+15)+'px;left:'+(stations[i].stationX)+'px;"></span>'+
-                '<div id="'+distanceLineIdName+'" class="line" style="top:'+parseInt((stations[i].stationY)+19)+'px;left:'+(stations[i].stationX)+'px;"></div>'+
-                '<div id="'+circleClickIdName+'" class="circle" style="top:'+parseInt((stations[i].stationY)+19)+'px;left:'+(stations[i].stationX)+'px;"></div>'+
-                '</div>');
+            // document.querySelector('#stationDiv').innerHTML =
+                stationDiv.append('<div class="station-style" id="'+stations[i].name+'"></div>');
+
+            //rangeCircle
+
+            rangeCircle.append(
+                    '<span id="'+circleDistanceIdName+'" class="circleSize" style="top:'+parseInt((stations[i].stationY)+PADDING_COMPENSATION)+'px;left:'+(stations[i].stationX)+'px;"></span>'+
+                '<div id="'+distanceLineIdName+'" class="line" style="top:'+parseInt((stations[i].stationY)+20)+'px;left:'+parseInt((stations[i].stationX)+4)+'px;"></div>'+
+                '<div id="'+circleClickIdName+'" class="circle" style="top:'+parseInt((stations[i].stationY)+20)+'px;left:'+parseInt((stations[i].stationX)+4)+'px;"></div>');
 
             $('#'+stations[i].name)
                 .css("top", stations[i].stationY+'px')
@@ -165,7 +173,7 @@ $(function () {
     }
 
     //create .on 'click' for each station and display info such as pos/location and the seismograph
-    function creatStationOnClick(stations) {
+    function createStationOnClick(stations) {
         for(let i = 0; i< stations.length; i++)
         {
             $('#'+stations[i].name).on('click', function () {
@@ -193,50 +201,48 @@ $(function () {
             - Select station and scroll up or down representing distance
      */
 
-    function createCircumferenceEvents(stations) {
+    function createCircumferenceEvents() {
         let wheelEventNumber = 0;
 
-        document.addEventListener('wheel', function (event) {
+        if(selected !== ''){
+            wheelEventNumber = event.deltaY;
 
-            let top = 0;
-            let left = 0;
+            let top = parseInt(window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('top').split('px')[0]);
+            let left = parseInt(window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('left').split('px')[0]);
+            let lineWidth = parseInt(window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('width').split('px')[0]);
 
-            if(selected !== ''){
-                wheelEventNumber = event.deltaY;
+            //grow
+            if(wheelEventNumber > 0){
+                if(selected['range'] >= 0 ){
+                    selected['range'] += 4;
 
-                if(wheelEventNumber > 0){
-                    if(selected.range >= 0 ){
-                        selected.range += 2.5;
+                    document.querySelector('#'+selected.name+'-circleClick').style.width = selected.range+'px';
+                    document.querySelector('#'+selected.name+'-circleClick').style.height = selected.range+'px';
+                    document.querySelector('#'+selected.name+'-circleClick').style.top = top-2+'px';
+                    document.querySelector('#'+selected.name+'-circleClick').style.left = left-2+'px';
 
-                        top = window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('top').split('px')[0];
-                        left = window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('left').split('px')[0];
-
-                        document.querySelector('#'+selected.name+'-circleClick').style.width = selected.range+'px';
-                        document.querySelector('#'+selected.name+'-circleClick').style.height = selected.range+'px';
-                        document.querySelector('#'+selected.name+'-circleClick').style.top = (Number(top)-1)+'px';
-                        document.querySelector('#'+selected.name+'-circleClick').style.left = (Number(left)-1)+'px';
-                        // test.style.top
-                    }
+                    document.querySelector('#'+selected.name+'-distanceLine').style.width = (lineWidth/2)+1+'px';
                 }
-                else if(wheelEventNumber < 0){
-                    if(selected.range > 0 ){
-                        selected.range -= 2.5;
-
-                        top = window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('top').split('px')[0];
-                        left = window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('left').split('px')[0];
-
-                        document.querySelector('#'+selected.name+'-circleClick').style.width = selected.range+'px';
-                        document.querySelector('#'+selected.name+'-circleClick').style.height = selected.range+'px';
-                        document.querySelector('#'+selected.name+'-circleClick').style.top = (Number(top)+1)+'px';
-                        document.querySelector('#'+selected.name+'-circleClick').style.left = (Number(left)+1)+'px';
-                    }
-
-                }
-                console.log(selected.range);
-
-                document.querySelector('#'+selected.name+'-circumferenceText').innerHTML = selected.range +'km';
             }
-        });
+            //shrink
+            else if(wheelEventNumber < 0){
+                if(selected['range'] > 0 ){
+                    selected['range'] -= 4;
+
+                    document.querySelector('#'+selected.name+'-circleClick').style.width = selected.range+'px';
+                    document.querySelector('#'+selected.name+'-circleClick').style.height = selected.range+'px';
+                    document.querySelector('#'+selected.name+'-circleClick').style.top = top+2+'px';
+                    document.querySelector('#'+selected.name+'-circleClick').style.left = left+2+'px';
+
+                    document.querySelector('#'+selected.name+'-distanceLine').style.width = (lineWidth/2)-4+'px';
+                }
+
+            }
+            console.log(selected['range']);
+
+            document.querySelector('#'+selected.name+'-circumferenceText').innerHTML = (selected['range']/2)+'km';
+        }
+
     }
 
 
@@ -257,11 +263,4 @@ $(function () {
     $('#gridToggle').on('click', function () {
         $('#grid').toggleClass('testGrid');
     });
-
-    function changeSelection(newSelection, stations) {
-        if(selected === ''){
-            selected = newSelection;
-        }
-    }
-
 });

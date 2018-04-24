@@ -8,32 +8,52 @@ gray: #525252
 
 */
 
+body{
+    background-color: #2c882b;
+    color: #ffffff;
+}
+
+.infoTab{
+    border: solid 1px #fff;
+}
+
+.btn-color{
+    background-color: #fff;
+}
+
+.btn-color:hover{
+    background-color: #525252;
+    color: #ffffff;
+}
+
 .station-style{
-    background-color: #000;
-    height: 8px;
-    width: 8px;
+    background-color: #ff5a00;
+    height: 10px;
+    width: 10px;
     position: absolute;
     z-index: 5;
 }
 
 .mapStyle{
-    background-color: #c1c1c1;
-    height: 400px;
-    width: 850px;
+    background-image: url("../images/map3.png");
+    /*background-color: #fff;*/
+    height: 600px;
+    width: 600px;
     z-index: -1;
+    border: solid 1px #fff;
 }
 
 .pool{
-    height: 400px;
-    width: 850px;
+    height: 600px;
+    width: 600px;
 }
 .size{
-    height: 400px;
-    width: 850px;
+    height: 600px;
+    width: 600px;
 }
 
 .selected{
-    border: 1px solid #d14900;
+    border: 1px solid #ff9b00;
 }
 
 
@@ -76,22 +96,25 @@ gray: #525252
 
 .circle{
     border-radius: 50%;
-    z-index: 3;
-    border: #383838 solid 1px;
+    z-index: 1;
+    border: #ffffff solid 1px;
     position: fixed;
-    background-color: rgba(56, 56, 56, 0.08);
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .line{
-    background-color: #000000;
+    background-color: #d14900;
     width: 4px;
-    height: 1px;
+    height: 2px;
     position: fixed;
-    z-index: 1;
+    z-index: 2;
 }
 
 .circleSize{
+    color: #000;
+    margin-top: 5px;
     user-select: none;
     position: fixed;
     z-index: 2;
+    font-weight: bolder;
 }
