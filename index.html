@@ -4,7 +4,9 @@
         <meta charset="UTF-8">
         <title>Earthquake Simulator</title>
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
         <link rel="stylesheet" href="assets/css/styles.css">
     </head>
     <body>
@@ -13,10 +15,12 @@
                 <div class="col-6 pt-3">
                     <div class="row">
                         <div class="col">
-                            <div id="map" class="mapStyle">
-                                <div id="stationDiv" class=""></div>
-                                <div id="rangeCircle" class=""></div>
-                                <div id="grid" class="size"></div>
+                            <div id="map-pane" class="mapStyle">
+                                <div id="stationsDiv" class=""></div>
+                                <div id="rangeCircleDiv" class=""></div>
+                                <div id="the-win" class="win"></div>
+                                <div id="solve-for" class="solveCircleStyle"></div>
+                                <div id="grid-pane" class="windowSize"></div>
                             </div>
                         </div>
                     </div>
@@ -27,44 +31,71 @@
                     </div>
 
                 </div>
-                <div class="col pt-3 ml-3">
+                <div class="col pt-3 ml-3" style="z-index: 6;">
                     <div class="row">
                         <div class="col">
-                            <button id="init" class="btn btn-color w-100">Generate Earthquake</button>
+                            <h2>Earthquake Simulator</h2>
+                            <p>Welcome to Green River College's Earthquake Simulator.</p>
+                            <ul>
+                                <li>1. Click Generate Earthquake</li>
+                                <li>2. Click on a station in the map area to see its info and graph.</li>
+                                <li>3. Scroll up/down to decrease or increase the range of the station.<br> <i>Hold shift to speed up scrolling.</i></li>
+                                <li></li>
+                                <li></li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="row my-3">
-                        <div class="col-3">
-                            <button id="gridToggle" class="btn btn-color w-100">Grid</button>
+
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <button id="init" class="btn btn-color w-100">Generate Earthquake</button>
+                                </div>
+                            </div>
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <button id="gridToggle" class="btn btn-color w-100">Grid</button>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col">
+                                    <button id="solve" class="btn btn-color w-100">Solve</button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col">
-                            <button class="btn btn-color w-100">Solve</button>
+                            <div id="infoTab" class="col infoTab ">
+                                <div class="row">
+                                    <div class="col">
+                                        <h3 id="stationName">Station Info</h3>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col">
+                                        <p><strong>X:</strong> <span id="stationXPos"></span></p>
+                                        <p><strong>Y:</strong> <span id="stationYPos"></span></p>
+                                        <p><strong>Range Size:</strong> <span id="rangeSize">0</span> km</p>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
                     </div>
 
-                    <div class="row  mb-3">
-                        <div id="infoTab" class="col infoTab mx-3 pt-3">
-                            <h3 id="stationName">Station Info</h3>
-                            <p>X: <span id="stationXPos"></span></p>
-                            <p>Y: <span id="stationYPos"></span></p>
-                        </div>
-                    </div>
                     <div class="row">
                         <div id="stationGraph" class="col">
-                            asd
+                            <canvas id="myChart" class="chartStyle p-2 w-100"  height="200"></canvas>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
 
-
-
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
-    <script src="seismic.js"></script>
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+        <script src="seismic.js"></script>
     </body>
 </html>

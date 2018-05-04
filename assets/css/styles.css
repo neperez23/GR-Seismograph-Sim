@@ -9,16 +9,28 @@ gray: #525252
 */
 
 body{
-    background-color: #2c882b;
-    color: #ffffff;
+    background-color: #fff;
+    color: #000000;
+}
+
+/*.btn{*/
+    /*border-radius: 0px;*/
+/*}*/
+
+.chartStyle{
+    background-color: #fff;
+    border: 1px solid #2c882b;
 }
 
 .infoTab{
-    border: solid 1px #fff;
+    /*border: solid 1px #fff;*/
+    /*background-color: #2c882b;*/
+    color: #000;
 }
 
 .btn-color{
-    background-color: #fff;
+    background-color: #2c882b;
+    color: #fff;
 }
 
 .btn-color:hover{
@@ -27,7 +39,8 @@ body{
 }
 
 .station-style{
-    background-color: #ff5a00;
+    background-color: #ffed0d;
+    border: solid 1px #000;
     height: 10px;
     width: 10px;
     position: absolute;
@@ -35,35 +48,26 @@ body{
 }
 
 .mapStyle{
-    background-image: url("../images/map3.png");
+    background-image: url("../images/map5.png");
     /*background-color: #fff;*/
     height: 600px;
     width: 600px;
     z-index: -1;
-    border: solid 1px #fff;
+    border: solid 1px #2c882b;
 }
-
-.pool{
-    height: 600px;
-    width: 600px;
+.windowSize{
+    height: 599px;
+    width: 599px;
 }
-.size{
-    height: 600px;
-    width: 600px;
-}
-
 .selected{
-    border: 1px solid #ff9b00;
+    border: 1px solid #000;
+    background-color: #ff21e5;
 }
 
 
 /***** Grid Overlay CSS *****/
 
-.testBG{
-    background-color: #f2f2f2;
-}
-
-.testGrid {
+.gridStyle {
     background-image:
             linear-gradient(
                     90deg,
@@ -89,6 +93,7 @@ body{
             50px, 100% 50px,
             10px, 100% 10px;
     pointer-events: none;
+    /*background-image: url("../images/lad_long_overlay.png");*/
 }
 
 
@@ -97,13 +102,13 @@ body{
 .circle{
     border-radius: 50%;
     z-index: 1;
-    border: #ffffff solid 1px;
+    border: #ffffff solid 2px;
     position: fixed;
-    background-color: rgba(255, 255, 255, 0.5);
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 .line{
-    background-color: #d14900;
+    background-color: #fff;
     width: 4px;
     height: 2px;
     position: fixed;
@@ -117,4 +122,29 @@ body{
     position: fixed;
     z-index: 2;
     font-weight: bolder;
+    background-color: white;
+    border-radius: 5px;
+}
+
+/*** Solve CSS ***/
+
+.solveCircleStyle{
+    display: none;
+    position: fixed;
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.65);
+    background-color: rgba(136, 204, 238, 0.61);
+    z-index: 4;
+}
+
+.win{
+    position: fixed;
+    background-color: #fff;
+    border-radius: 15px;
+    width: 250px;
+    height: 85px;
+    display: none;
+    z-index: 6;
 }

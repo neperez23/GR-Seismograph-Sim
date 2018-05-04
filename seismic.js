@@ -1,89 +1,95 @@
-/*
-    Author:     Nicholas Perez
-    Date:       3/10/18
-    Version:    1.0
-    Green River College Seismic Simulating Earthquakes.
- */
-
-$(function () {
+    /*
+        Author:     Nicholas Perez
+        Date:       3/10/18
+        Version:    1.0
+        Green River College Seismic Simulating Earthquakes.
+     */
 
     //Station object with a pos: x and y, as well as its distance from the earthquake
-    function Station(name, stationX, stationY, distance, range) {
+    function Station(name, stationX, stationY, distance, range, data) {
         this.name = name;
         this.stationX = stationX;
         this.stationY = stationY;
         this.distance = distance;
         this.range = range;
+        this.data = data;
     }
 
     //Earthquake object with a pos: x and y, as well as its magnitude, or strength
-    function Earthquake(earthquakeX, earthquakeY, magnitude) {
+    function Earthquake(earthquakeX, earthquakeY, magnitude, pWaveSpeed, sWaveSpeed, duration) {
         this.earthquakeX = earthquakeX;
         this.earthquakeY = earthquakeY;
         this.magnitude = magnitude;
+        this.pWaveSpeed = pWaveSpeed;
+        this.sWaveSpeed = sWaveSpeed;
+        this.duration = duration;
     }
 
     //generates a random number between 1 and the number passed in, numRange
     function getRandomIntInclusive(numRange){
-
         return Math.floor(Math.random() * numRange)+1;
     }
 
-    /*
-        All these constants represent the max range of the x and y for the station and the earthquake.
-
-        The numbers are later multiplied by ten to use on a pixel grid
-        and to avoid decimal points when finding distance later
-    */
-    const STATION_X_RANGE = 50;
-    const STATION_Y_RANGE = 50;
-    const EARTHQUAKE_X_RANGE = 40;
-    const EARTHQUAKE_Y_RANGE = 40;
-
-    //misc constants
+    const STATION_RANGE = 50;
+    const EARTHQUAKE_RANGE = 40;
     const NUMBER_OF_STATIONS = 5;
     const PADDING_COMPENSATION = 15;
+    const MAX_MAGNITUDE = 7;
+    const MAX_P_WAVE_SPEED = 3;
+    const MAX_S_WAVE_SPEED = 4;
+    const MAX_EARTHQUAKE_DURATION = 20;
+    const MAX_LABEL = 150;
 
     //Global variables
-    let map = $('#map');
-    let stationPool =[];
-    let stationDiv = $('#stationDiv');
-    let rangeCircle = $('#rangeCircle')
     let pos = {x: 0, y: 0};
-    let selected;
+    let stationPool, selected, stationsDiv, rangedCircleDiv, earthQuake;
+    let ctx = document.querySelector("#myChart");
+    let myChart = makeChart([]);
+    let isCtrl = false;
 
-
-
-
-
+    //initialize function
     function init() {
+        stationsDiv = document.querySelector('#stationsDiv');
+        rangedCircleDiv = document.querySelector('#rangeCircleDiv');
 
-        //checks if its fresh load
-        if(stationPool.length > 0){
-            stationPool = [];
+        //reset/instantiate variables
+        selected = '';
+        stationPool = [];
+        stationsDiv.innerHTML = '';
+        rangedCircleDiv.innerHTML = '';
+        myChart = makeChart([]);
 
-            for(let j = 0 ; j<stationPool.length ; j++){
-                stationPool[j]['range'] = 0;
-            }
+
+        if(document.querySelector('#grid-pane').classList.length > 1){
+            document.querySelector('#grid-pane').classList.toggle('gridStyle');
         }
 
-        selected = '';
+        document.querySelector('#the-win').style.display = 'none';
+        document.querySelector('#solve-for').style.display = 'none';
+
 
         //creates earthquake object
-        let earthQuake = new Earthquake(
-            getRandomIntInclusive(EARTHQUAKE_X_RANGE)*10,
-            getRandomIntInclusive(EARTHQUAKE_Y_RANGE)*10,
-            getRandomIntInclusive(7)+2
+
+
+        earthQuake = new Earthquake(
+            getRandomIntInclusive(EARTHQUAKE_RANGE) * 10,
+            getRandomIntInclusive(EARTHQUAKE_RANGE) * 10,
+            getRandomIntInclusive(MAX_MAGNITUDE) + 2,
+            0,
+            0,
+            getRandomIntInclusive(MAX_EARTHQUAKE_DURATION)+10
         );
-        console.log(earthQuake);
+        earthQuake['pWaveSpeed'] = getRandomIntInclusive(MAX_P_WAVE_SPEED)+4;
+        earthQuake['sWaveSpeed'] = getRandomIntInclusive(MAX_S_WAVE_SPEED);
+
 
         //create stations
-        for(let i = 0; i < NUMBER_OF_STATIONS; i++){
+        for (let i = 0; i < NUMBER_OF_STATIONS; i++) {
             stationPool.push(new Station(
-                'station'+(i+1),
-                (getRandomIntInclusive(STATION_X_RANGE)*10)+PADDING_COMPENSATION,
-                (getRandomIntInclusive(STATION_Y_RANGE)*10)+PADDING_COMPENSATION,
-                0,0));
+                'station' + (i + 1),
+                (getRandomIntInclusive(STATION_RANGE) * 10) + PADDING_COMPENSATION,
+                (getRandomIntInclusive(STATION_RANGE) * 10) + PADDING_COMPENSATION,
+                0, 0, ));
 
             stationPool[i].distance = Math.round(
                 findDistance(
@@ -94,58 +100,75 @@ $(function () {
                 )
             );
 
+            stationPool[i].data = generateChartData(
+                stationPool[i].distance,
+                earthQuake.magnitude,
+                earthQuake.pWaveSpeed,
+                earthQuake.sWaveSpeed,
+                earthQuake.duration);
+
+            //creates new html elements, adds them to the map, and adds event listeners
+            plotStations(stationsDiv, stationPool[i]);
+            plotRangeCircles(rangedCircleDiv, stationPool[i]);
+            createStationClick(stationPool[i]);
         }
-
-        //adds stations to map
-        plotStations(stationPool);
-
-        //creates and adds click functionality for station divs
-        createStationOnClick(stationPool);
 
         //creates circle measure on wheel movement
         document.addEventListener('wheel',createCircumferenceEvents);
 
-
+        //debug
         console.log(stationPool);
+        console.log(earthQuake);
 
     }
 
-    //plots station into the #stationDiv at random top/left points
-    function plotStations(stations) {
-        stationDiv.empty();
-        rangeCircle.empty();
+    //plots station into the #stationsDiv at random top/left points
+    function plotStations(stationsDiv, station) {
 
-        let test = document.querySelector('#stationDiv');
-        let stationName;
-        let circleDistanceIdName,distanceLineIdName,circleClickIdName;
+        //new stationDiv
+        let newDiv = document.createElement('div');
+        newDiv.id = station.name;
+        newDiv.className = 'station-style';
+        newDiv.style.top = station.stationY+'px';
+        newDiv.style.left = station.stationX+'px';
 
-        for(let i = 0; i<stations.length; i++){
-            circleDistanceIdName = stations[i].name+'-circumferenceText';
-            distanceLineIdName = stations[i].name+'-distanceLine';
-            circleClickIdName = stations[i].name+'-circleClick';
-
-            // document.querySelector('#stationDiv').innerHTML =
-                stationDiv.append('<div class="station-style" id="'+stations[i].name+'"></div>');
-
-            //rangeCircle
-
-            rangeCircle.append(
-                    '<span id="'+circleDistanceIdName+'" class="circleSize" style="top:'+parseInt((stations[i].stationY)+PADDING_COMPENSATION)+'px;left:'+(stations[i].stationX)+'px;"></span>'+
-                '<div id="'+distanceLineIdName+'" class="line" style="top:'+parseInt((stations[i].stationY)+20)+'px;left:'+parseInt((stations[i].stationX)+4)+'px;"></div>'+
-                '<div id="'+circleClickIdName+'" class="circle" style="top:'+parseInt((stations[i].stationY)+20)+'px;left:'+parseInt((stations[i].stationX)+4)+'px;"></div>');
-
-            $('#'+stations[i].name)
-                .css("top", stations[i].stationY+'px')
-                .css("left", stations[i].stationX+'px');
-        }
+        //adds to div
+        stationsDiv.append(newDiv);
     }
 
+    //plots rangedCircle and its parts into the #rangeCircleDiv at top/left points based on its station
+    function plotRangeCircles(circleRangeDiv, station) {
+
+        //new line div
+        let newLineDiv = document.createElement('div');
+        newLineDiv.id = station.name + '-circumferenceText';
+        newLineDiv.className = 'circleSize';
+        newLineDiv.style.top = station.stationY+PADDING_COMPENSATION+'px';
+        newLineDiv.style.left = station.stationX+PADDING_COMPENSATION+'px';
+
+        //new circle div
+        let newCircleDiv = document.createElement('div');
+        newCircleDiv.id = station.name+'-distanceLine';
+        newCircleDiv.className = 'line';
+        newCircleDiv.style.top = station.stationY+20+'px';
+        newCircleDiv.style.left = station.stationX+4+'px';
+
+        //new circumference span
+        let newCircumferenceSpan = document.createElement('span');
+        newCircumferenceSpan.id = station.name+'-circleClick';
+        newCircumferenceSpan.className = 'circle';
+        newCircumferenceSpan.style.top = station.stationY+20+'px';
+        newCircumferenceSpan.style.left = station.stationX+4+'px';
+
+        //adds to div
+        circleRangeDiv.append(newCircleDiv, newLineDiv, newCircumferenceSpan);
+    }
 
     //sets the selected to a station object
     function setSelected(selectedName, stations) {
         for (let i = 0 ; i < stations.length ; i++){
 
-            if(selectedName == stations[i].name){
+            if(selectedName === stations[i].name){
                 return stations[i];
             }
         }
@@ -172,95 +195,255 @@ $(function () {
         return Math.round(Math.sqrt(Math.pow(x, 2) + Math.pow(y, 2)));
     }
 
-    //create .on 'click' for each station and display info such as pos/location and the seismograph
-    function createStationOnClick(stations) {
-        for(let i = 0; i< stations.length; i++)
-        {
-            $('#'+stations[i].name).on('click', function () {
-                $('#stationName').text(stations[i].name).css('text-transform','capitalize');
-                $('#stationXPos').text(stations[i].stationX);
-                $('#stationYPos').text(stations[i].stationY);
+    //create .on 'click' for each station and display info such as pos/location and the seismograph uses isEmpty()
+    function createStationClick(station) {
 
-                if(selected !== ''){
-                    $('#'+selected.name).removeClass('selected');
-                }
+        let selectedDiv = document.querySelector('#'+station.name);
 
+        selectedDiv.addEventListener('click', () =>{
 
-                selected = setSelected($(this).attr('id'), stationPool);
+            if(!isEmpty(selected)){
+                document.querySelector('#'+selected.name).classList.remove('selected');
+            }
 
-                console.log(selected);
+            document.querySelector('#stationName').innerHTML = station.name;
+            document.querySelector('#stationName').style.textTransform = 'capitalize';
+            document.querySelector('#stationXPos').innerHTML = station.stationX;
+            document.querySelector('#stationYPos').innerHTML = station.stationY;
+            document.querySelector('#rangeSize').innerHTML = station.range;
 
-                $('#'+selected.name).addClass('selected');
-            });
-        }
+            selected = setSelected(station.name, stationPool);
+
+            selectedDiv.classList.add('selected');
+
+            myChart = makeChart(selected.data);
+        });
     }
 
+    //part of createStationClick()
+    function isEmpty(obj) {
+        return Object.keys(obj).length === 0;
+    }
 
-    /*
-        Circumference Measuring tool for Stations
-            - Select station and scroll up or down representing distance
-     */
-
+    //circumference Measuring tool for Stations - Select station and scroll up or down representing distance
     function createCircumferenceEvents() {
-        let wheelEventNumber = 0;
+        let currentSelectedCircle = document.querySelector('#'+selected.name+'-circleClick');
+        let currentSelectedLine = document.querySelector('#'+selected.name+'-distanceLine');
+        let currentSelectedText = document.querySelector('#'+selected.name+'-circumferenceText');
+
+        let baseRangeIncrement = 4;
+        let baseTopLeftIncrement = 2;
+
+        if(isCtrl){
+            baseRangeIncrement = 8;
+            baseTopLeftIncrement = 4;
+        }
 
         if(selected !== ''){
-            wheelEventNumber = event.deltaY;
-
+            let wheelEventNumber = event.deltaY;
             let top = parseInt(window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('top').split('px')[0]);
             let left = parseInt(window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('left').split('px')[0]);
             let lineWidth = parseInt(window.getComputedStyle((document.querySelector('#'+selected.name+'-circleClick')), null).getPropertyValue('width').split('px')[0]);
 
             //grow
             if(wheelEventNumber > 0){
+
                 if(selected['range'] >= 0 ){
-                    selected['range'] += 4;
 
-                    document.querySelector('#'+selected.name+'-circleClick').style.width = selected.range+'px';
-                    document.querySelector('#'+selected.name+'-circleClick').style.height = selected.range+'px';
-                    document.querySelector('#'+selected.name+'-circleClick').style.top = top-2+'px';
-                    document.querySelector('#'+selected.name+'-circleClick').style.left = left-2+'px';
+                    selected['range'] += baseRangeIncrement;
 
-                    document.querySelector('#'+selected.name+'-distanceLine').style.width = (lineWidth/2)+1+'px';
+                    currentSelectedCircle.style.width = selected.range+'px';
+                    currentSelectedCircle.style.height = selected.range+'px';
+                    currentSelectedCircle.style.top = top-baseTopLeftIncrement+'px';
+                    currentSelectedCircle.style.left = left-baseTopLeftIncrement+'px';
+                    currentSelectedLine.style.width = (lineWidth/2)+1+'px';
                 }
             }
+
             //shrink
             else if(wheelEventNumber < 0){
+
                 if(selected['range'] > 0 ){
-                    selected['range'] -= 4;
 
-                    document.querySelector('#'+selected.name+'-circleClick').style.width = selected.range+'px';
-                    document.querySelector('#'+selected.name+'-circleClick').style.height = selected.range+'px';
-                    document.querySelector('#'+selected.name+'-circleClick').style.top = top+2+'px';
-                    document.querySelector('#'+selected.name+'-circleClick').style.left = left+2+'px';
+                    selected['range'] -= baseRangeIncrement;
 
-                    document.querySelector('#'+selected.name+'-distanceLine').style.width = (lineWidth/2)-4+'px';
+                    currentSelectedCircle.style.width = selected.range+'px';
+                    currentSelectedCircle.style.height = selected.range+'px';
+                    currentSelectedCircle.style.top = top+baseTopLeftIncrement+'px';
+                    currentSelectedCircle.style.left = left+baseTopLeftIncrement+'px';
+                    currentSelectedLine.style.width = (lineWidth/2)-4+'px';
                 }
-
             }
-            console.log(selected['range']);
-
-            document.querySelector('#'+selected.name+'-circumferenceText').innerHTML = (selected['range']/2)+'km';
+            currentSelectedText.innerHTML = (selected['range']/2)+'km';
+            currentSelectedText.style.padding = '2px';
         }
-
+        document.querySelector('#rangeSize').innerHTML = (selected['range']/2).toString();
     }
 
-
     //generates seismic graph for each station
+    function generateChartData(distance, magnitude, pWaveSpeed, sWaveSpeed, duration) {
+        let dataAmount = MAX_LABEL;
+        let data = [];
+        let isOther = false;
+        let arrivalTime = Math.round(distance/pWaveSpeed);
+        let lagTime = Math.round((Math.round(distance/sWaveSpeed) - arrivalTime)/10)+5;
 
+        console.log('distance: '+ distance +", p-wave arrival count: "+arrivalTime+', s-wave arrival count: '+Math.round(distance/sWaveSpeed)+', lag time: '+ lagTime);
+
+        //adds arrival time
+        for(let a = 0 ; a < arrivalTime ; a++){
+            data.push(0);
+            dataAmount--;
+        }
+
+        //adds p wave
+        for(let d = 0; d<duration ; d++){
+            if(isOther){
+                data.push(getRandomIntInclusive(magnitude));
+                isOther = false;
+            }else{
+                data.push(-Math.abs(getRandomIntInclusive(magnitude)));
+                isOther = true;
+            }
+            dataAmount--;
+        }
+
+        //adds lag time
+        for (let lt = 0; lt < lagTime ; lt++){
+            data.push(0);
+            dataAmount--;
+        }
+
+        //adds s wave
+        for(let d = 0; d<duration+10 ; d++){
+            if(isOther){
+                data.push(getRandomIntInclusive(magnitude));
+                isOther = false;
+            }else{
+                data.push(-Math.abs(getRandomIntInclusive(magnitude)));
+                isOther = true;
+            }
+            dataAmount--;
+        }
+
+        for (let i = 0 ; i < dataAmount ; i ++){
+            data.push(0);
+        }
+
+        return data
+    }
+
+    //makes chart labels
+    function makeChartLabels(seconds) {
+        let labels = [];
+
+        for(let i = 0 ; i <= seconds ; i++){
+            if((i%10) === 0){
+                labels.push(i+'sec');
+            }else{
+                labels.push('');
+            }
+
+        }
+
+        return labels;
+    }
+
+    //creates a new chart based on data from generateChartData()
+    function makeChart(data) {
+
+        return new Chart(ctx, {
+            type: 'line',
+            options:{
+                scales:{
+                    yAxes: [{
+                        ticks:{
+                            beginAtZero: true
+                        }
+                    }]
+                },
+                legend:{
+                    display: true,
+                    position: 'top'
+                },
+                tooltips: {
+                    mode: 'index'
+                }
+            },
+            data: {
+                labels: makeChartLabels(MAX_LABEL),
+
+                datasets:[
+                    {
+                        label: 'p-wave',
+                        fill: false,
+                        borderCapStyle: 'butt',
+                        pointRadius: 0,
+                        lineTension: 0,
+                        borderColor: '#ff2400',
+                        borderWidth: 1,
+
+                        data: data
+                    }
+                ],
+
+            }
+        });
+    }
 
     //UI and button controls
-    $('#init').on('click', function () {
-        init();
+    document.querySelector('#init').addEventListener('click', () =>{
+       init();
     });
 
-    map.on('mousemove',function (event) {
+    document.querySelector('#map-pane').addEventListener('mousemove', (event) => {
         pos.x = event.pageX - PADDING_COMPENSATION;
         pos.y = event.pageY - PADDING_COMPENSATION;
-        $('#pos').text(pos.x +","+pos.y);
+        document.querySelector('#pos').innerHTML = pos.x +","+pos.y;
     });
 
-    $('#gridToggle').on('click', function () {
-        $('#grid').toggleClass('testGrid');
+    document.querySelector('#gridToggle').addEventListener('click', () =>{
+        document.querySelector('#grid-pane').classList.toggle('gridStyle');
     });
-});
+
+    document.querySelector('#map-pane').addEventListener('click', (event) =>{
+       let solver = document.querySelector('#solve-for');
+       let targetId = event.target.id;
+
+       if(targetId.split('-').length !== 1){
+           solver.style.display = 'block';
+           solver.style.left = (event.pageX-12)+'px';
+           solver.style.top = (event.pageY-12)+'px';
+       }
+    });
+
+    document.querySelector('#solve').addEventListener('click', () =>{
+        let solver = document.querySelector('#solve-for');
+        let theWin = document.querySelector('#the-win');
+
+        let solvePos = [parseInt(solver.style.left.split('px')[0]),parseInt(solver.style.top.split('px')[0])];
+        let eqPos = [earthQuake.earthquakeX, earthQuake.earthquakeY];
+
+        //if the pos of the solver is within 15px of the earthquake then win .. else loose
+        let x = Math.abs((solvePos[0]-eqPos[0]));
+        let y = Math.abs((solvePos[1]-eqPos[1]));
+        if(x <= 50 && y <= 50)
+        {
+            theWin.style.top = '250px';
+            theWin.style.left = '200px';
+            theWin.style.display = 'block';
+            theWin.innerHTML = '<h1 class="text-center">Winner</h1><p class="text-center">Try again!</p>';
+        }
+    });
+
+    document.addEventListener('keydown', (event)=>{
+        if(event.keyCode === 16){
+            isCtrl = true;
+        }
+    });
+
+    document.addEventListener('keyup', (event)=>{
+        if(event.keyCode === 16){
+            isCtrl = false;
+        }
+    });
