@@ -38,10 +38,9 @@
     const MAX_P_WAVE_SPEED = 3;
     const MAX_S_WAVE_SPEED = 4;
     const MAX_EARTHQUAKE_DURATION = 20;
-    const MAX_LABEL = 150;
+    const MAX_LABEL = 400;
 
     //Global variables
-    let pos = {x: 0, y: 0};
     let stationPool, selected, stationsDiv, rangedCircleDiv, earthQuake;
     let ctx = document.querySelector("#myChart");
     let myChart = makeChart([]);
@@ -64,7 +63,7 @@
             document.querySelector('#grid-pane').classList.toggle('gridStyle');
         }
 
-        document.querySelector('#the-win').style.display = 'none';
+        document.querySelector('#win-check').style.display = 'none';
         document.querySelector('#solve-for').style.display = 'none';
 
 
@@ -397,9 +396,7 @@
     });
 
     document.querySelector('#map-pane').addEventListener('mousemove', (event) => {
-        pos.x = event.pageX - PADDING_COMPENSATION;
-        pos.y = event.pageY - PADDING_COMPENSATION;
-        document.querySelector('#pos').innerHTML = pos.x +","+pos.y;
+        document.querySelector('#pos').innerHTML = (event.pageX - PADDING_COMPENSATION) + "," + (event.pageY - PADDING_COMPENSATION);
     });
 
     document.querySelector('#gridToggle').addEventListener('click', () =>{
@@ -419,7 +416,7 @@
 
     document.querySelector('#solve').addEventListener('click', () =>{
         let solver = document.querySelector('#solve-for');
-        let theWin = document.querySelector('#the-win');
+        let theWin = document.querySelector('#win-check');
 
         let solvePos = [parseInt(solver.style.left.split('px')[0]),parseInt(solver.style.top.split('px')[0])];
         let eqPos = [earthQuake.earthquakeX, earthQuake.earthquakeY];
