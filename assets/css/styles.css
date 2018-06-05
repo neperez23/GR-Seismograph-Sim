@@ -5,7 +5,6 @@ green: #2c882b
 orange: #d14900
 gray: #525252
 
-
 */
 
 body{
@@ -13,18 +12,19 @@ body{
     color: #000000;
 }
 
-/*.btn{*/
-    /*border-radius: 0px;*/
-/*}*/
-
 .chartStyle{
     background-color: #fff;
-    border: 1px solid #2c882b;
+}
+
+#myChart{
+    padding-top: 10px;
+    padding-right: 10px;
+    height: 300px !important;
+    width: 600px !important;
+    border: solid 1px #2c882b;
 }
 
 .infoTab{
-    /*border: solid 1px #fff;*/
-    /*background-color: #2c882b;*/
     color: #000;
 }
 
@@ -48,12 +48,12 @@ body{
 }
 
 .mapStyle{
-    background-image: url("../images/map5.png");
-    /*background-color: #fff;*/
+    background-image: url("/assets/images/map52.png");
     height: 600px;
     width: 600px;
     z-index: -1;
     border: solid 1px #2c882b;
+    user-select: none;
 }
 .windowSize{
     height: 599px;
@@ -68,32 +68,35 @@ body{
 /***** Grid Overlay CSS *****/
 
 .gridStyle {
-    background-image:
-            linear-gradient(
-                    90deg,
-                    rgb(248, 250, 249) 1px,
-                    transparent 0
-            ),
-            linear-gradient(
-                    180deg,
-                    rgb(243, 249, 250) 1px,
-                    transparent 0
-            ),
-            linear-gradient(
-                    90deg,
-                    rgba(250, 244, 245, 0.3) 1px,
-                    transparent 0
-            ),
-            linear-gradient(
-                    180deg,
-                    rgba(250, 246, 250, 0.3) 1px,
-                    transparent 0
-            );
-    background-size:
-            50px, 100% 50px,
-            10px, 100% 10px;
+    /*background-image:*/
+            /*linear-gradient(*/
+                    /*90deg,*/
+                    /*rgb(248, 250, 249) 1px,*/
+                    /*transparent 0*/
+            /*),*/
+            /*linear-gradient(*/
+                    /*180deg,*/
+                    /*rgb(243, 249, 250) 1px,*/
+                    /*transparent 0*/
+            /*),*/
+            /*linear-gradient(*/
+                    /*90deg,*/
+                    /*rgba(250, 244, 245, 0.3) 1px,*/
+                    /*transparent 0*/
+            /*),*/
+            /*linear-gradient(*/
+                    /*180deg,*/
+                    /*rgba(250, 246, 250, 0.3) 1px,*/
+                    /*transparent 0*/
+            /*);*/
+    /*background-size:*/
+            /*50px, 100% 50px,*/
+            /*10px, 100% 10px;*/
     pointer-events: none;
-    /*background-image: url("../images/lad_long_overlay.png");*/
+    background-image: url("/assets/images/lad_long_overlay.png");
+}
+#rangeCircleDiv{
+    position: relative;
 }
 
 
@@ -103,40 +106,41 @@ body{
     border-radius: 50%;
     z-index: 1;
     border: #ffffff solid 2px;
-    position: fixed;
+    position: absolute;
     background-color: rgba(255, 255, 255, 0.25);
 }
 
 .line{
-    background-color: #fff;
-    width: 4px;
+    background-color: #ffffff;
     height: 2px;
-    position: fixed;
+    position: absolute;
     z-index: 2;
 }
 
 .circleSize{
     color: #000;
-    margin-top: 5px;
     user-select: none;
-    position: fixed;
-    z-index: 2;
+    position: absolute;
+    z-index: 3;
     font-weight: bolder;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.51);
     border-radius: 5px;
 }
 
 /*** Solve CSS ***/
 
+#solve-for{
+    position: relative;
+}
+
 .solveCircleStyle{
-    display: none;
-    position: fixed;
+    position: absolute;
     width: 25px;
     height: 25px;
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0.65);
     background-color: rgba(136, 204, 238, 0.61);
-    z-index: 4;
+    z-index: 7;
 }
 
 .win{
@@ -147,4 +151,39 @@ body{
     height: 85px;
     display: none;
     z-index: 6;
+}
+
+.mapPointer{
+    cursor: crosshair;
+}
+
+/*** Measuring Tool ***/
+#stationGraph{
+    width: 600px;
+    height: 300px;
+    user-select: none;
+}
+#toolBox{
+    width: 600px;
+    height: 300px;
+    user-select: none;
+    position: absolute;
+}
+#timeTool{
+    border-left: solid 1px #2c882b;
+    border-right: solid 1px #2c882b;
+    background-color: rgba(44, 136, 43, 0.16);
+    position: absolute;
+    height: inherit;
+    pointer-events: none;
+    overflow: inherit;
+}
+#ampTool{
+    border-top: solid 1px rgba(255, 130, 0, 0.51);
+    border-bottom: solid 1px rgba(255, 130, 0, 0.51);
+    background-color: rgba(255, 130, 0, 0.1);
+    position: absolute;
+    pointer-events: none;
+    width: inherit;
+    overflow: inherit;
 }
