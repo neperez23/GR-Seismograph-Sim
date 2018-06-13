@@ -13,7 +13,7 @@ const MAX_MAGNITUDE = 9.0;
 const P_WAVE_SPEED = 8;
 const S_WAVE_SPEED = 3.45;
 const MAX_EARTHQUAKE_DURATION = 25;
-const MAX_LABEL_COUNT = 184;
+
 const STATION_POS = ['62,216','150,485','443,526','539,316','483,54','221,41','238,224'];
 
 //Station object with a pos: x and y, as well as its distance from the earthquake
