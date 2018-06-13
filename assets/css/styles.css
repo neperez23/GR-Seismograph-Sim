@@ -47,13 +47,25 @@ body{
     z-index: 5;
 }
 
+#demoStation{
+    background-color: #ffed0d;
+    border: solid 1px #000;
+    height: 10px;
+    width: 10px;
+    margin: 0;
+    padding: 0;
+    position: inherit;
+}
+
 .mapStyle{
-    background-image: url("/assets/images/map52.png");
+    background-image: url("../../assets/images/map52.png");
     height: 600px;
     width: 600px;
     z-index: -1;
     border: solid 1px #2c882b;
     user-select: none;
+    box-sizing: border-box;
+
 }
 .windowSize{
     height: 599px;
@@ -62,6 +74,9 @@ body{
 .selected{
     border: 1px solid #000;
     background-color: #ff21e5;
+}
+#map-pane{
+    /*position: absolute;*/
 }
 
 
@@ -93,7 +108,7 @@ body{
             /*50px, 100% 50px,*/
             /*10px, 100% 10px;*/
     pointer-events: none;
-    background-image: url("/assets/images/lad_long_overlay.png");
+    background-image: url("../../assets/images/lad_long_overlay.png");
 }
 #rangeCircleDiv{
     position: relative;
@@ -140,21 +155,34 @@ body{
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0.65);
     background-color: rgba(136, 204, 238, 0.61);
+    pointer-events: none;
     z-index: 7;
 }
-
-.win{
-    position: fixed;
-    background-color: #fff;
-    border-radius: 15px;
+#message{
+    position: absolute;
+    top: 250px;
+    left: 200px;
     width: 250px;
-    height: 85px;
-    display: none;
-    z-index: 6;
+    height: 100px;
+    z-index: 8;
+    background-color: rgba(255, 255, 255, 0.76);
+    border-radius: 3px;
+    padding: 10px 5px 10px 5px;
 }
 
 .mapPointer{
     cursor: crosshair;
+}
+
+
+/* Hide HTML5 Up and Down arrows. */
+input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type="number"] {
+    -moz-appearance: textfield;
 }
 
 /*** Measuring Tool ***/
@@ -176,7 +204,8 @@ body{
     position: absolute;
     height: inherit;
     pointer-events: none;
-    overflow: inherit;
+    z-index: 1;
+    box-sizing: border-box;
 }
 #ampTool{
     border-top: solid 1px rgba(255, 130, 0, 0.51);
@@ -186,4 +215,29 @@ body{
     pointer-events: none;
     width: inherit;
     overflow: inherit;
+    z-index: 1;
+    box-sizing: border-box;
+}
+
+#timeText{
+    position: absolute;
+    left: 250px;
+    top: 5px;
+    z-index: 2;
+    color: #2c882b;
+    background-color: rgba(255, 255, 255, 0.65);
+    padding: 3px;
+    border-radius: 3px;
+}
+
+#ampText{
+    position: absolute;
+    left: 315px;
+    top: 5px;
+    z-index: 2;
+    color: #d14900;
+    background-color: rgba(255, 255, 255, 0.65);
+    padding: 3px;
+    border-radius: 3px;
+
 }

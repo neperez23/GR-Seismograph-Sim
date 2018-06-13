@@ -19,20 +19,26 @@
                         <div class="modal-content">
                             <div class="modal-header">
 
-                                <h5 class="modal-title" id="instructionModalLabel">Instructions</h5>
+                                <h4 class="modal-title" id="instructionModalLabel">Instructions</h4>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
                             <div class="modal-body">
-                                <p></p>
+                                <h6 class="text-center">Basic Instructions</h6>
+                                <hr>
                                 <p>To get started click the Create Earthquake button.</p>
-                                <p>Then select a station on the map to view its information.</p>
-                                <p>To plot the station range scroll up or down to change the range size.
+                                <p>Select a station, (<span style="color: #ffed0d"> yellow square </span>), on the map to view its information.</p>
+                                <p>To measure the currently selected station, (<span style="color: #ff21e5;"> purple square </span>), range scroll up or down to change the range size.
                                     <i>Note: Hold shift to scroll faster for larger distances.</i></p>
-                                <p>Click plot epicenter then click the map in the location you want to
-                                    choose as the epicenter to place then click the solve button.</p>
+                                <p>Click plot epicenter and click the map to place epicenter.</p>
+                                <p>Click solve button to solve.</p>
+                                <hr>
+                                <h6 class="text-center">Basic Instructions</h6>
+                                <hr>
+                                <p></p>
+
                             </div>
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -60,10 +66,10 @@
                                         <div class="input-group" id="data-group-1">
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="inputGroupSelect01">Data 1:</label>
+                                                    <label class="input-group-text" for="inputGroupSelect01">1:</label>
                                                 </div>
                                                 <select class="custom-select" id="inputGroupSelect01">
-                                                    <option selected>Choose Station</option>
+                                                    <option selected>Station</option>
                                                     <option value="1">One</option>
                                                     <option value="2">Two</option>
                                                     <option value="3">Three</option>
@@ -74,15 +80,15 @@
                                                 </select>
 
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Lag:</span>
+                                                    <span class="input-group-text" >Lag(sec):</span>
                                                 </div>
                                                 <input class="form-control" title="Lag Time" type="number" id="lag1">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Amp:</span>
+                                                    <span class="input-group-text" >Amp(mm):</span>
                                                 </div>
                                                 <input class="form-control" title="Measured Amp" type="number" id="amp1">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Distance:</span>
+                                                    <span class="input-group-text" >Dist(km):</span>
                                                 </div>
                                                 <input class="form-control" title="Measured Distance" type="number" id="dis1">
                                                 <div class="input-group-prepend">
@@ -99,10 +105,10 @@
                                         <div class="input-group" id="data-group-2">
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="inputGroupSelect02">Data 2:</label>
+                                                    <label class="input-group-text" for="inputGroupSelect02">2:</label>
                                                 </div>
                                                 <select class="custom-select" id="inputGroupSelect02">
-                                                    <option selected>Choose Station</option>
+                                                    <option selected>Station</option>
                                                     <option value="1">One</option>
                                                     <option value="2">Two</option>
                                                     <option value="3">Three</option>
@@ -113,15 +119,15 @@
                                                 </select>
 
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Lag:</span>
+                                                    <span class="input-group-text" >Lag(sec):</span>
                                                 </div>
                                                 <input class="form-control" title="Lag Time" type="number" id="lag2">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Amp:</span>
+                                                    <span class="input-group-text" >Amp(mm):</span>
                                                 </div>
                                                 <input class="form-control" title="Measured Amp" type="number" id="amp2">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Distance:</span>
+                                                    <span class="input-group-text" >Dist(km):</span>
                                                 </div>
                                                 <input class="form-control" title="Measured Distance" type="number" id="dis2">
                                                 <div class="input-group-prepend">
@@ -138,10 +144,10 @@
                                         <div class="input-group" id="data-group-3">
                                             <div class="input-group mb-3">
                                                 <div class="input-group-prepend">
-                                                    <label class="input-group-text" for="inputGroupSelect03">Data 3:</label>
+                                                    <label class="input-group-text" for="inputGroupSelect03">3:</label>
                                                 </div>
                                                 <select class="custom-select" id="inputGroupSelect03">
-                                                    <option selected>Choose Station</option>
+                                                    <option selected>Station</option>
                                                     <option value="1">One</option>
                                                     <option value="2">Two</option>
                                                     <option value="3">Three</option>
@@ -152,15 +158,15 @@
                                                 </select>
 
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Lag:</span>
+                                                    <span class="input-group-text" >Lag(sec):</span>
                                                 </div>
                                                 <input class="form-control" title="Lag Time" type="number" id="lag3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Amp:</span>
+                                                    <span class="input-group-text" >Amp(mm):</span>
                                                 </div>
                                                 <input class="form-control" title="Measured Amp" type="number" id="amp3">
                                                 <div class="input-group-prepend">
-                                                    <span class="input-group-text" >Distance:</span>
+                                                    <span class="input-group-text" >Dist(km):</span>
                                                 </div>
                                                 <input class="form-control" title="Measured Distance" type="number" id="dis3">
                                                 <div class="input-group-prepend">
@@ -176,7 +182,6 @@
 
                             </div>
                             <div class="modal-footer">
-                                <button id="placeEpi" type="button" class="btn btn-color" data-dismiss="modal">Place Epicenter</button>
                                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                             </div>
                         </div>
@@ -187,6 +192,7 @@
                     <div class="row">
                         <div class="col-12 pt-3">
                             <div id="map-pane" class="mapStyle">
+                                <!--<div id="message">asd</div>-->
                                 <div id="stationsDiv" class=""></div>
                                 <div id="rangeCircleDiv" class=""></div>
                                 <div id="win-check" class="win"></div>
@@ -200,32 +206,32 @@
                             <span><strong>Mouse POS: </strong><span id="pos"></span></span>
                         </div>
                     </div>
-
                 </div>
                 <div class="col-6 pt-3 " style="z-index: 6;">
                     <div class="row">
                         <div class="col-12">
                             <h2>Earthquake Simulator</h2>
                             <p>Welcome to Green River College's Earthquake Simulator.</p>
-
-
-
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col">
-
-                            <button id="init" class="btn btn-color" type="button">Create Earthquake</button>
-                            <button id="gridToggle" class="btn btn-color" type="button">Toggle Grid</button>
-                            <!--<button id="plotEpiBtn" class="btn btn-color" type="button" data-toggle="modal" data-target="#dataInputModal">Plot Epicenter</button>-->
-                            <button id="plotEpi" class="btn btn-color" type="button" >Plot Epicenter</button>
-                            <button id="solveBtn" class="btn btn-color" type="button">Solve</button>
-
-
-                            <button id="help" type="button" class="btn btn-color" data-toggle="modal" data-target="#instructionModal">
-                                Instructions
-                            </button>
-
+                            <div class="row">
+                                <div class="col">
+                                    <button id="help" type="button" class="btn btn-color" data-toggle="modal" data-target="#instructionModal">
+                                        Instructions
+                                    </button>
+                                    <button id="init" class="btn btn-color" type="button">Create Earthquake</button>
+                                    <button id="gridToggle" class="btn btn-color" type="button">Toggle Grid</button>
+                                </div>
+                            </div>
+                            <div class="row mt-1">
+                                <div class="col">
+                                    <button id="notePadBtn" class="btn btn-color" type="button" data-toggle="modal" data-target="#dataInputModal">Notepad</button>
+                                    <button id="plotEpi" class="btn btn-color" type="button" >Plot Epicenter</button>
+                                    <button id="solveBtn" class="btn btn-color" type="button">Solve</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="row mb-2">
@@ -245,13 +251,14 @@
                     <div class="row">
                         <div class="col">
                             <div id="stationGraph">
-                                <div id="toolBox">
+                                <div id="toolBox" class="">
                                     <div id="timeTool"></div>
                                     <div id="ampTool"></div>
+                                    <span id="timeText" >0</span>
+                                    <span id="ampText" >0</span>
                                 </div>
                                 <canvas id="myChart" class="chartStyle w-100"></canvas>
                             </div>
-                            <span>Mouse Pos: <span id="graphpos"></span></span>
                         </div>
                     </div>
                 </div>
@@ -263,5 +270,7 @@
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
         <script src="app/js/earthquake_sim.js"></script>
+        <script src="app/js/seismographCharts.js"></script>
+        <script src="app/js/tools.js"></script>
     </body>
 </html>
