@@ -12,7 +12,6 @@
     <body>
         <div class="container-fluid">
             <div class="row">
-
                 <!-- Instructions Modal -->
                 <div class="modal fade" id="instructionModal" tabindex="-1" role="dialog" aria-labelledby="instructionModalLabel" aria-hidden="true">
                     <div class="modal-dialog" role="document">
@@ -29,15 +28,17 @@
                                 <h6 class="text-center">Basic Instructions</h6>
                                 <hr>
                                 <p>To get started click the Create Earthquake button.</p>
-                                <p>Select a station, (<span style="color: #ffed0d"> yellow square </span>), on the map to view its information.</p>
-                                <p>To measure the currently selected station, (<span style="color: #ff21e5;"> purple square </span>), range scroll up or down to change the range size.
+                                <p>Select a station on the map to view its information.</p>
+                                <p>To map the currently selected stations range, scroll up or down to change the range size.
                                     <i>Note: Hold shift to scroll faster for larger distances.</i></p>
                                 <p>Click plot epicenter and click the map to place epicenter.</p>
                                 <p>Click solve button to solve.</p>
                                 <hr>
                                 <h6 class="text-center">Basic Instructions</h6>
                                 <hr>
-                                <p></p>
+                                <p>Station: <span style="color: #ffed0d"> yellow square </span></p>
+                                <p>Selected Station: <span style="color: #ff21e5;"> purple square </span></p>
+
 
                             </div>
                             <div class="modal-footer">
@@ -52,7 +53,7 @@
                     <div class="modal-dialog modal-lg" role="document">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <h5 class="modal-title" id="dataInputLabel">Plot Epicenter</h5>
+                                <h5 class="modal-title" id="dataInputLabel">Plot Epicenter - <span style="color: red;">COMING SOON</span></h5>
 
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                     <span aria-hidden="true">&times;</span>
@@ -221,13 +222,13 @@
                                     <button id="help" type="button" class="btn btn-color" data-toggle="modal" data-target="#instructionModal">
                                         Instructions
                                     </button>
-                                    <button id="init" class="btn btn-color" type="button">Create Earthquake</button>
+                                    <button id="notePadBtn" class="btn btn-color" type="button" data-toggle="modal" data-target="#dataInputModal">Notepad</button>
                                     <button id="gridToggle" class="btn btn-color" type="button">Toggle Grid</button>
                                 </div>
                             </div>
                             <div class="row mt-1">
                                 <div class="col">
-                                    <button id="notePadBtn" class="btn btn-color" type="button" data-toggle="modal" data-target="#dataInputModal">Notepad</button>
+                                    <button id="init" class="btn btn-color" type="button">Create Earthquake</button>
                                     <button id="plotEpi" class="btn btn-color" type="button" >Plot Epicenter</button>
                                     <button id="solveBtn" class="btn btn-color" type="button">Solve</button>
                                 </div>
@@ -266,11 +267,10 @@
         </div>
 
         <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+        <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>-->
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
         <script src="app/js/earthquake_sim.js"></script>
-        <script src="app/js/seismographCharts.js"></script>
-        <script src="app/js/tools.js"></script>
     </body>
 </html>

@@ -47,15 +47,6 @@ body{
     z-index: 5;
 }
 
-#demoStation{
-    background-color: #ffed0d;
-    border: solid 1px #000;
-    height: 10px;
-    width: 10px;
-    margin: 0;
-    padding: 0;
-    position: inherit;
-}
 
 .mapStyle{
     background-image: url("../../assets/images/map52.png");
